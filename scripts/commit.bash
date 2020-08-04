@@ -9,3 +9,5 @@ git add -A
 git commit -m "Cesium ${tag} release"
 git tag ${tag}
 git push --tags
+
+git push origin master
