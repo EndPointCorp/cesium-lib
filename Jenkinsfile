@@ -17,7 +17,7 @@ node() {
       sh './scripts/commit.bash'
     }
     else {
-      sh "echo Don't commit/push for non-master branch"
+      sh "echo No commit/push for non-master branch"
     }
   }
 }
