@@ -1,8 +1,11 @@
 node() {
-  agent any
-  triggers {
-    cron('H H * * *')
-  }
+  properties(
+    [
+       pipelineTriggers([
+         cron( env.BRANCH_NAME.equals('master') ? 'H H * * *' : '')
+       ])
+    ]
+  )
   stage('Checkout') {
     checkout scm
   }
