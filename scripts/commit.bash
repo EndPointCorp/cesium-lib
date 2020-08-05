@@ -7,9 +7,14 @@ echo "Version: ${tag}"
 
 eval $(ssh-agent -s)
 
-git add -A
-git commit -m "Cesium ${tag} release"
-git tag ${tag}
-git push --tags
 
-git push origin master
+if git rev-parse ${tag} >/dev/null 2>&1
+then
+    echo "Tag ${tag} already exists"
+else
+    git add -A
+    git commit -m "Cesium ${tag} release"
+    git tag ${tag}
+    git push --tags origin master
+fi
+
