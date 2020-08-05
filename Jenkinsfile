@@ -13,9 +13,11 @@ node() {
     sh "python ./scripts/getrelease.py --copy-build ./latest --base-dir releases --remove"
   }
   stage('Commit/Push') {
-    when {
-      branch master
+    if (env.BRANCH_NAME == 'master') {
+      sh './scripts/commit.bash'
     }
-    sh "./scripts/commit.bash"
+    else {
+      echo 'Don't commit/push for non-master branch'
+    }
   }
 }
