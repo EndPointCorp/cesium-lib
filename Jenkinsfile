@@ -1,11 +1,22 @@
 node() {
+  agent any
+  triggers {
+    cron('H H * * *')
+  }
   stage('Checkout') {
-    checkoutInfo = checkout scm
+    checkout scm
   }
   stage('Run build script') {
-    sh "python ./scripts/getrelease.py --copy-build ./latest --base-dir releases --remove"
+    steps {
+      sh "python ./scripts/getrelease.py --copy-build ./latest --base-dir releases --remove"
+    }
   }
   stage('Commit/Push') {
-    sh "./scripts/commit.bash"
+     when {
+       branch master
+     }
+     steps {
+       sh "./scripts/commit.bash"
+     }
   }
 }
