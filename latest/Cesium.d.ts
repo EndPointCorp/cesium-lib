@@ -847,6 +847,28 @@ export class AxisAlignedBoundingBox {
 }
 
 /**
+ * Object for setting and retrieving the default Bing Maps API key.
+ *
+ * A Bing API key is only required if you are using {@link BingMapsImageryProvider}
+ * or {@link BingMapsGeocoderService}. You can create your own key at
+ * {@link https://www.bingmapsportal.com/}.
+ */
+export namespace BingMapsApi {
+    /**
+     * The default Bing Maps API key to use if one is not provided to the
+     * constructor of an object that uses the Bing Maps API.
+     */
+    var defaultKey: string;
+    /**
+     * Gets the key to use to access the Bing Maps API. If the provided
+     * key is defined, it is returned. Otherwise, returns {@link BingMapsApi.defaultKey}.
+     * @param providedKey - The provided key to use if defined.
+     * @returns The Bing Maps API key to use.
+     */
+    function getKey(providedKey: string | null | undefined): string | undefined;
+}
+
+/**
  * Provides geocoding through Bing Maps.
  * @param options - Object with the following properties:
  * @param options.key - A key to use with the Bing Maps geocoding service
@@ -4344,15 +4366,15 @@ export class CompressedTextureBuffer {
 /**
  * A description of a polygon composed of arbitrary coplanar positions.
  * @example
- * var polygonGeometry = new Cesium.CoplanarPolygonGeometry({
- *  polygonHierarchy: new Cesium.PolygonHierarchy(
- *     Cesium.Cartesian3.fromDegreesArrayHeights([
+ * var polygon = new Cesium.CoplanarPolygonGeometry({
+ *   positions : Cesium.Cartesian3.fromDegreesArrayHeights([
  *      -90.0, 30.0, 0.0,
- *      -90.0, 30.0, 300000.0,
- *      -80.0, 30.0, 300000.0,
+ *      -90.0, 30.0, 1000.0,
+ *      -80.0, 30.0, 1000.0,
  *      -80.0, 30.0, 0.0
- *   ]))
+ *   ])
  * });
+ * var geometry = Cesium.CoplanarPolygonGeometry.createGeometry(polygon);
  * @param options - Object with the following properties:
  * @param options.polygonHierarchy - A polygon hierarchy that can include holes.
  * @param [options.stRotation = 0.0] - The rotation of the texture coordinates, in radians. A positive rotation is counter-clockwise.
@@ -8681,6 +8703,19 @@ export class MapProjection {
      *          created and returned.
      */
     unproject(cartesian: Cartesian3, result?: Cartographic): Cartographic;
+}
+
+export namespace MapboxApi {
+    /**
+     * The default Mapbox API access token to use if one is not provided to the
+     * constructor of an object that uses the Mapbox API.  If this property is undefined,
+     * Cesium's default access token is used, which is only suitable for use early in development.
+     * Please supply your own access token as soon as possible and prior to deployment.
+     * Visit {@link https://www.mapbox.com/help/create-api-access-token/} for details.
+     * When Cesium's default access token is used, a message is printed to the console the first
+     * time the Mapbox API is used.
+     */
+    var defaultAccessToken: string;
 }
 
 /**
@@ -25155,6 +25190,7 @@ export namespace BingMapsImageryProvider {
      * @property url - The url of the Bing Maps server hosting the imagery.
      * @property key - The Bing Maps key for your application, which can be
      *        created at {@link https://www.bingmapsportal.com/}.
+     *        If this parameter is not provided, {@link BingMapsApi.defaultKey} is used, which is undefined by default.
      * @property [tileProtocol] - The protocol to use when loading tiles, e.g. 'http' or 'https'.
      *        By default, tiles are loaded using the same protocol as the page.
      * @property [mapStyle = BingMapsStyle.AERIAL] - The type of Bing Maps imagery to load.
@@ -28731,7 +28767,7 @@ export class ClippingPlaneCollection {
      * <code>isDestroyed</code> will result in a {@link DeveloperError} exception.  Therefore,
      * assign the return value (<code>undefined</code>) to the object as done in the example.
      * @example
-     * clippingPlanes = clippingPlanes && clippingPlanes.destroy();
+     * clippingPlanes = clippingPlanes && clippingPlanes .destroy();
      */
     destroy(): void;
 }
@@ -36431,7 +36467,8 @@ export class PrimitiveCollection {
      * @example
      * var billboards = scene.primitives.add(new Cesium.BillboardCollection());
      * @param primitive - The primitive to add.
-     * @param [index] - The index to add the layer at.  If omitted, the primitive will be added at the bottom of all existing primitives.
+     * @param [index] - the index to add the layer at.  If omitted, the primitive will
+     *                         added at the bottom  of all existing primitives.
      * @returns The primitive added to the collection.
      */
     add(primitive: any, index?: number): any;
@@ -42007,10 +42044,6 @@ export class Viewer {
     trackedEntity: Entity | undefined;
     /**
      * Gets or sets the object instance for which to display a selection indicator.
-     *
-     * If a user interactively picks a Cesium3DTilesFeature instance, then this property
-     * will contain a transient Entity instance with a property named "feature" that is
-     * the instance that was picked.
      */
     selectedEntity: Entity | undefined;
     /**
@@ -42194,6 +42227,7 @@ declare module "cesium/Source/Core/ArcGISTiledElevationTerrainProvider" { import
 declare module "cesium/Source/Core/ArcType" { import { ArcType } from 'cesium'; export default ArcType; }
 declare module "cesium/Source/Core/AssociativeArray" { import { AssociativeArray } from 'cesium'; export default AssociativeArray; }
 declare module "cesium/Source/Core/AxisAlignedBoundingBox" { import { AxisAlignedBoundingBox } from 'cesium'; export default AxisAlignedBoundingBox; }
+declare module "cesium/Source/Core/BingMapsApi" { import { BingMapsApi } from 'cesium'; export default BingMapsApi; }
 declare module "cesium/Source/Core/BingMapsGeocoderService" { import { BingMapsGeocoderService } from 'cesium'; export default BingMapsGeocoderService; }
 declare module "cesium/Source/Core/BoundingRectangle" { import { BoundingRectangle } from 'cesium'; export default BoundingRectangle; }
 declare module "cesium/Source/Core/BoundingSphere" { import { BoundingSphere } from 'cesium'; export default BoundingSphere; }
@@ -42285,6 +42319,7 @@ declare module "cesium/Source/Core/LeapSecond" { import { LeapSecond } from 'ces
 declare module "cesium/Source/Core/LinearApproximation" { import { LinearApproximation } from 'cesium'; export default LinearApproximation; }
 declare module "cesium/Source/Core/LinearSpline" { import { LinearSpline } from 'cesium'; export default LinearSpline; }
 declare module "cesium/Source/Core/MapProjection" { import { MapProjection } from 'cesium'; export default MapProjection; }
+declare module "cesium/Source/Core/MapboxApi" { import { MapboxApi } from 'cesium'; export default MapboxApi; }
 declare module "cesium/Source/Core/Math" { import { Math } from 'cesium'; export default Math; }
 declare module "cesium/Source/Core/Matrix2" { import { Matrix2 } from 'cesium'; export default Matrix2; }
 declare module "cesium/Source/Core/Matrix3" { import { Matrix3 } from 'cesium'; export default Matrix3; }
