@@ -871,11 +871,11 @@ export namespace BingMapsApi {
 /**
  * Provides geocoding through Bing Maps.
  * @param options - Object with the following properties:
- * @param options.key - A key to use with the Bing Maps geocoding service
+ * @param [options.key] - A key to use with the Bing Maps geocoding service
  */
 export class BingMapsGeocoderService {
     constructor(options: {
-        key: string;
+        key?: string;
     });
     /**
      * The URL endpoint for the Bing geocoder service
@@ -3355,11 +3355,6 @@ export class Color {
      */
     toCssColorString(): string;
     /**
-     * Creates a string containing CSS hex string color value for this color.
-     * @returns The CSS hex string equivalent of this color.
-     */
-    toCssHexString(): string;
-    /**
      * Converts this color to an array of red, green, blue, and alpha values
      * that are in the range of 0 to 255.
      * @param [result] - The array to store the result in, if undefined a new instance will be created.
@@ -5540,13 +5535,6 @@ export class Ellipsoid {
      * @returns the intersection point if it's inside the ellipsoid, undefined otherwise
      */
     getSurfaceNormalIntersectionWithZAxis(position: Cartesian3, buffer?: number, result?: Cartesian3): Cartesian3 | undefined;
-    /**
-     * Computes an approximation of the surface area of a rectangle on the surface of an ellipsoid using
-     * Gauss-Legendre 10th order quadrature.
-     * @param rectangle - The rectangle used for computing the surface area.
-     * @returns The approximate area of the rectangle on the surface of this ellipsoid.
-     */
-    surfaceArea(rectangle: Rectangle): number;
 }
 
 /**
@@ -5590,17 +5578,17 @@ export class EllipsoidGeodesic {
     /**
      * Provides the location of a point at the indicated portion along the geodesic.
      * @param fraction - The portion of the distance between the initial and final points.
-     * @param [result] - The object in which to store the result.
+     * @param result - The object in which to store the result.
      * @returns The location of the point along the geodesic.
      */
-    interpolateUsingFraction(fraction: number, result?: Cartographic): Cartographic;
+    interpolateUsingFraction(fraction: number, result: Cartographic): Cartographic;
     /**
      * Provides the location of a point at the indicated distance along the geodesic.
      * @param distance - The distance from the inital point to the point of interest along the geodesic
-     * @param [result] - The object in which to store the result.
+     * @param result - The object in which to store the result.
      * @returns The location of the point along the geodesic.
      */
-    interpolateUsingSurfaceDistance(distance: number, result?: Cartographic): Cartographic;
+    interpolateUsingSurfaceDistance(distance: number, result: Cartographic): Cartographic;
 }
 
 /**
@@ -5837,7 +5825,7 @@ export class EllipsoidTangentPlane {
      * @param cartesians - The list of positions surrounding the center point.
      * @param [ellipsoid = Ellipsoid.WGS84] - The ellipsoid to use.
      */
-    static fromPoints(cartesians: Cartesian3[], ellipsoid?: Ellipsoid): void;
+    static fromPoints(cartesians: Cartesian3, ellipsoid?: Ellipsoid): void;
     /**
      * Computes the projection of the provided 3D position onto the 2D plane, radially outward from the {@link EllipsoidTangentPlane.ellipsoid} coordinate system origin.
      * @param cartesian - The point to project.
@@ -6667,20 +6655,6 @@ export class GeometryAttributes {
 }
 
 /**
- * Base class for all geometry creation utility classes that can be passed to {@link GeometryInstance}
- * for asynchronous geometry creation.
- */
-export class GeometryFactory {
-    constructor();
-    /**
-     * Returns a geometry.
-     * @param geometryFactory - A description of the circle.
-     * @returns The computed vertices and indices.
-     */
-    static createGeometry(geometryFactory: GeometryFactory): Geometry | undefined;
-}
-
-/**
  * Geometry instancing allows one {@link Geometry} object to be positions in several
  * different locations and colored uniquely.  For example, one {@link BoxGeometry} can
  * be instanced several times, each with a different <code>modelMatrix</code> to change
@@ -6719,7 +6693,7 @@ export class GeometryFactory {
  */
 export class GeometryInstance {
     constructor(options: {
-        geometry: Geometry | GeometryFactory;
+        geometry: Geometry;
         modelMatrix?: Matrix4;
         id?: any;
         attributes?: any;
@@ -7404,18 +7378,6 @@ export class HeadingPitchRange {
 export class HeadingPitchRoll {
     constructor(heading?: number, pitch?: number, roll?: number);
     /**
-     * Gets or sets the heading.
-     */
-    heading: number;
-    /**
-     * Gets or sets the pitch.
-     */
-    pitch: number;
-    /**
-     * Gets or sets the roll.
-     */
-    roll: number;
-    /**
      * Computes the heading, pitch and roll from a quaternion (see http://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles )
      * @param quaternion - The quaternion from which to retrieve heading, pitch, and roll, all expressed in radians.
      * @param [result] - The object in which to store the result. If not provided, a new instance is created and returned.
@@ -7941,7 +7903,7 @@ export interface InterpolationAlgorithm {
 /**
  * This enumerated type is used in determining where, relative to the frustum, an
  * object is located. The object can either be fully contained within the frustum (INSIDE),
- * partially inside the frustum and partially outside (INTERSECTING), or somewhere entirely
+ * partially inside the frustum and partially outside (INTERSECTING), or somwhere entirely
  * outside of the frustum's 6 planes (OUTSIDE).
  */
 export enum Intersect {
@@ -10949,7 +10911,7 @@ export class Occluder {
      *                       Visibility.PARTIAL if the occludee is partially visible, or
      *                       Visibility.FULL if the occludee is fully visible.
      */
-    computeVisibility(occludeeBS: BoundingSphere): Visibility;
+    computeVisibility(occludeeBS: BoundingSphere): number;
     /**
      * Computes a point that can be used as the occludee position to the visibility functions.
      * Use a radius of zero for the occludee radius.  Typically, a user computes a bounding sphere around
@@ -12012,11 +11974,11 @@ export class Plane {
  * var planeGeometry = new Cesium.PlaneGeometry({
  *   vertexFormat : Cesium.VertexFormat.POSITION_ONLY
  * });
- * @param [options] - Object with the following properties:
+ * @param options - Object with the following properties:
  * @param [options.vertexFormat = VertexFormat.DEFAULT] - The vertex attributes to be computed.
  */
 export class PlaneGeometry {
-    constructor(options?: {
+    constructor(options: {
         vertexFormat?: VertexFormat;
     });
     /**
@@ -13363,11 +13325,11 @@ export class Rectangle {
     /**
      * Gets the width of the rectangle in radians.
      */
-    readonly width: number;
+    width: number;
     /**
      * Gets the height of the rectangle in radians.
      */
-    readonly height: number;
+    height: number;
     /**
      * The number of elements used to pack the object into an array.
      */
@@ -14053,15 +14015,9 @@ export class Resource {
      */
     hasHeaders: boolean;
     /**
-     * Override Object#toString so that implicit string conversion gives the
-     * complete URL represented by this Resource.
-     * @returns The URL represented by this Resource
-     */
-    toString(): string;
-    /**
      * Returns the url, optional with the query string and processed by a proxy.
      * @param [query = false] - If true, the query string is included.
-     * @param [proxy = false] - If true, the url is processed by the proxy object, if defined.
+     * @param [proxy = false] - If true, the url is processed the proxy object if defined.
      * @returns The url with all the requested components.
      */
     getUrlComponent(query?: boolean, proxy?: boolean): string;
@@ -14844,9 +14800,8 @@ export class ScreenSpaceEventHandler {
      * @param type - The ScreenSpaceEventType of input event.
      * @param [modifier] - A KeyboardEventModifier key that is held when a <code>type</code>
      * event occurs.
-     * @returns The function to be executed on an input event.
      */
-    getInputAction(type: number, modifier?: number): (...params: any[]) => any;
+    getInputAction(type: number, modifier?: number): void;
     /**
      * Removes the function to be executed on an input event.
      * @param type - The ScreenSpaceEventType of input event.
@@ -15077,7 +15032,7 @@ export class SimplePolylineGeometry {
      * @param simplePolylineGeometry - A description of the polyline.
      * @returns The computed vertices and indices.
      */
-    static createGeometry(simplePolylineGeometry: SimplePolylineGeometry): Geometry | undefined;
+    static createGeometry(simplePolylineGeometry: SimplePolylineGeometry): Geometry;
 }
 
 /**
@@ -15126,7 +15081,7 @@ export class SphereGeometry {
      * @param sphereGeometry - A description of the sphere.
      * @returns The computed vertices and indices.
      */
-    static createGeometry(sphereGeometry: SphereGeometry): Geometry | undefined;
+    static createGeometry(sphereGeometry: SphereGeometry): Geometry;
 }
 
 /**
@@ -15176,7 +15131,7 @@ export class SphereOutlineGeometry {
      * @param sphereGeometry - A description of the sphere outline.
      * @returns The computed vertices and indices.
      */
-    static createGeometry(sphereGeometry: SphereOutlineGeometry): Geometry | undefined;
+    static createGeometry(sphereGeometry: SphereOutlineGeometry): Geometry;
 }
 
 /**
@@ -16442,15 +16397,6 @@ export namespace Transforms {
      * @returns The modified result parameter or a new Cartesian2 instance if none was provided.
      */
     function pointToWindowCoordinates(modelViewProjectionMatrix: Matrix4, viewportTransformation: Matrix4, point: Cartesian3, result?: Cartesian2): Cartesian2;
-    /**
-     * Transform a position and velocity to a rotation matrix.
-     * @param position - The position to transform.
-     * @param velocity - The velocity vector to transform.
-     * @param [ellipsoid = Ellipsoid.WGS84] - The ellipsoid whose fixed frame is used in the transformation.
-     * @param [result] - The object onto which to store the result.
-     * @returns The modified result parameter or a new Matrix3 instance if none was provided.
-     */
-    function rotationMatrixFromPositionVelocity(position: Cartesian3, velocity: Cartesian3, ellipsoid?: Ellipsoid, result?: Matrix3): Matrix3;
 }
 
 /**
@@ -17315,20 +17261,6 @@ export function binarySearch(array: any[], itemToFind: any, comparator: binarySe
 export type binarySearchComparator = (a: any, b: any) => number;
 
 /**
- * Given a relative URL under the Cesium base URL, returns an absolute URL.
- * @example
- * var viewer = new Cesium.Viewer("cesiumContainer", {
- *   imageryProvider: new Cesium.TileMapServiceImageryProvider({
- *   url: Cesium.buildModuleUrl("Assets/Textures/NaturalEarthII"),
- *   }),
- *   baseLayerPicker: false,
- * });
- * @param relativeUrl - The relative path.
- * @returns The absolutely URL representation of the provided path.
- */
-export function buildModuleUrl(relativeUrl: string): string;
-
-/**
  * A browser-independent function to cancel an animation frame requested using {@link requestAnimationFrame}.
  * @param requestID - The value returned by {@link requestAnimationFrame}.
  */
@@ -18086,7 +18018,7 @@ export class BoxGraphics {
     /**
      * Gets or sets {@link Cartesian3} Property property specifying the length, width, and height of the box.
      */
-    dimensions: Property | undefined;
+    dimensions: Property;
     /**
      * Gets or sets the Property specifying the {@link HeightReference}.
      */
@@ -18267,9 +18199,9 @@ export class Cesium3DTilesetVisualizer {
  */
 export class CheckerboardMaterialProperty {
     constructor(options?: {
-        evenColor?: Property | Color;
-        oddColor?: Property | Color;
-        repeat?: Property | Cartesian2;
+        evenColor?: Property;
+        oddColor?: Property;
+        repeat?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -18285,15 +18217,15 @@ export class CheckerboardMaterialProperty {
     /**
      * Gets or sets the Property specifying the first {@link Color}.
      */
-    evenColor: Property | undefined;
+    evenColor: Property;
     /**
      * Gets or sets the Property specifying the second {@link Color}.
      */
-    oddColor: Property | undefined;
+    oddColor: Property;
     /**
      * Gets or sets the {@link Cartesian2} Property specifying how many times the tiles repeat in each direction.
      */
-    repeat: Property | undefined;
+    repeat: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -18321,7 +18253,7 @@ export class CheckerboardMaterialProperty {
  * @param [color = Color.WHITE] - The {@link Color} Property to be used.
  */
 export class ColorMaterialProperty {
-    constructor(color?: Property | Color);
+    constructor(color?: Property);
     /**
      * Gets a value indicating if this property is constant.  A property is considered
      * constant if getValue always returns the same result for the current definition.
@@ -18336,7 +18268,7 @@ export class ColorMaterialProperty {
     /**
      * Gets or sets the {@link Color} {@link Property}.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -18487,7 +18419,7 @@ export class CompositeEntityCollection {
      * @param id - The id of the entity to retrieve.
      * @returns The entity with the provided id or undefined if the id did not exist in the collection.
      */
-    getById(id: string): Entity | undefined;
+    getById(id: string): Entity;
 }
 
 /**
@@ -20326,7 +20258,7 @@ export class EntityCollection {
      * @param id - The id of the entity to retrieve.
      * @returns The entity with the provided id or undefined if the id did not exist in the collection.
      */
-    getById(id: string): Entity | undefined;
+    getById(id: string): Entity;
     /**
      * Gets an entity with the specified id or creates it and adds it to the collection if it does not exist.
      * @param id - The id of the entity to retrieve or create.
@@ -20719,11 +20651,11 @@ export class GeometryVisualizer {
  */
 export class GridMaterialProperty {
     constructor(options?: {
-        color?: Property | Color;
-        cellAlpha?: Property | number;
-        lineCount?: Property | Cartesian2;
-        lineThickness?: Property | Cartesian2;
-        lineOffset?: Property | Cartesian2;
+        color?: Property;
+        cellAlpha?: Property;
+        lineCount?: Property;
+        lineThickness?: Property;
+        lineOffset?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -20739,23 +20671,23 @@ export class GridMaterialProperty {
     /**
      * Gets or sets the Property specifying the grid {@link Color}.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets or sets the numeric Property specifying cell alpha values.
      */
-    cellAlpha: Property | undefined;
+    cellAlpha: Property;
     /**
      * Gets or sets the {@link Cartesian2} Property specifying the number of grid lines along each axis.
      */
-    lineCount: Property | undefined;
+    lineCount: Property;
     /**
      * Gets or sets the {@link Cartesian2} Property specifying the thickness of grid lines along each axis.
      */
-    lineThickness: Property | undefined;
+    lineThickness: Property;
     /**
      * Gets or sets the {@link Cartesian2} Property specifying the starting offset of grid lines along each axis.
      */
-    lineOffset: Property | undefined;
+    lineOffset: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -20815,10 +20747,10 @@ export class GroundGeometryUpdater {
  */
 export class ImageMaterialProperty {
     constructor(options?: {
-        image?: Property | string | HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
-        repeat?: Property | Cartesian2;
-        color?: Property | Color;
-        transparent?: Property | boolean;
+        image?: Property;
+        repeat?: Property;
+        color?: Property;
+        transparent?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -20834,19 +20766,19 @@ export class ImageMaterialProperty {
     /**
      * Gets or sets the Property specifying Image, URL, Canvas, or Video to use.
      */
-    image: Property | undefined;
+    image: Property;
     /**
      * Gets or sets the {@link Cartesian2} Property specifying the number of times the image repeats in each direction.
      */
-    repeat: Property | undefined;
+    repeat: Property;
     /**
      * Gets or sets the Color Property specifying the desired color applied to the image.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets or sets the Boolean Property specifying whether the image has transparency
      */
-    transparent: Property | undefined;
+    transparent: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -21709,9 +21641,9 @@ export class ModelVisualizer {
  */
 export class NodeTransformationProperty {
     constructor(options?: {
-        translation?: Property | Cartesian3;
-        rotation?: Property | Quaternion;
-        scale?: Property | Cartesian3;
+        translation?: Property;
+        rotation?: Property;
+        scale?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -21727,15 +21659,15 @@ export class NodeTransformationProperty {
     /**
      * Gets or sets the {@link Cartesian3} Property specifying the (x, y, z) translation to apply to the node.
      */
-    translation: Property | undefined;
+    translation: Property;
     /**
      * Gets or sets the {@link Quaternion} Property specifying the (x, y, z, w) rotation to apply to the node.
      */
-    rotation: Property | undefined;
+    rotation: Property;
     /**
      * Gets or sets the {@link Cartesian3} Property specifying the (x, y, z) scaling to apply to the node.
      */
-    scale: Property | undefined;
+    scale: Property;
     /**
      * Gets the value of the property at the provided time.
      * @param time - The time for which to retrieve the value.
@@ -22281,7 +22213,7 @@ export class PolygonGraphics {
  * @param [color = Color.WHITE] - The {@link Color} Property to be used.
  */
 export class PolylineArrowMaterialProperty {
-    constructor(color?: Property | Color);
+    constructor(color?: Property);
     /**
      * Gets a value indicating if this property is constant.  A property is considered
      * constant if getValue always returns the same result for the current definition.
@@ -22296,7 +22228,7 @@ export class PolylineArrowMaterialProperty {
     /**
      * Gets or sets the {@link Color} {@link Property}.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -22329,10 +22261,10 @@ export class PolylineArrowMaterialProperty {
  */
 export class PolylineDashMaterialProperty {
     constructor(options?: {
-        color?: Property | Color;
-        gapColor?: Property | Color;
-        dashLength?: Property | number;
-        dashPattern?: Property | number;
+        color?: Property;
+        gapColor?: Property;
+        dashLength?: Property;
+        dashPattern?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -22348,19 +22280,19 @@ export class PolylineDashMaterialProperty {
     /**
      * Gets or sets the Property specifying the {@link Color} of the line.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets or sets the Property specifying the {@link Color} of the gaps in the line.
      */
-    gapColor: Property | undefined;
+    gapColor: Property;
     /**
      * Gets or sets the numeric Property specifying the length of a dash cycle
      */
-    dashLength: Property | undefined;
+    dashLength: Property;
     /**
      * Gets or sets the numeric Property specifying a dash pattern
      */
-    dashPattern: Property | undefined;
+    dashPattern: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -22513,9 +22445,9 @@ export class PolylineGeometryUpdater {
  */
 export class PolylineGlowMaterialProperty {
     constructor(options?: {
-        color?: Property | Color;
-        glowPower?: Property | number;
-        taperPower?: Property | number;
+        color?: Property;
+        glowPower?: Property;
+        taperPower?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -22531,15 +22463,15 @@ export class PolylineGlowMaterialProperty {
     /**
      * Gets or sets the Property specifying the {@link Color} of the line.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets or sets the numeric Property specifying the strength of the glow, as a percentage of the total line width (less than 1.0).
      */
-    glowPower: Property | undefined;
+    glowPower: Property;
     /**
      * Gets or sets the numeric Property specifying the strength of the tapering effect, as a percentage of the total line length.  If 1.0 or higher, no taper effect is used.
      */
-    taperPower: Property | undefined;
+    taperPower: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -22684,9 +22616,9 @@ export class PolylineGraphics {
  */
 export class PolylineOutlineMaterialProperty {
     constructor(options?: {
-        color?: Property | Color;
-        outlineColor?: Property | Color;
-        outlineWidth?: Property | number;
+        color?: Property;
+        outlineColor?: Property;
+        outlineWidth?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -22702,15 +22634,15 @@ export class PolylineOutlineMaterialProperty {
     /**
      * Gets or sets the Property specifying the {@link Color} of the line.
      */
-    color: Property | undefined;
+    color: Property;
     /**
      * Gets or sets the Property specifying the {@link Color} of the outline.
      */
-    outlineColor: Property | undefined;
+    outlineColor: Property;
     /**
      * Gets or sets the numeric Property specifying the width of the outline.
      */
-    outlineWidth: Property | undefined;
+    outlineWidth: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -22936,7 +22868,7 @@ export class PositionProperty {
 }
 
 /**
- * A {@link Property} whose value is an array whose items are the computed value
+ * A {@link PositionProperty} whose value is an array whose items are the computed value
  * of other PositionProperty instances.
  * @param [value] - An array of Property instances.
  * @param [referenceFrame = ReferenceFrame.FIXED] - The reference frame in which the position is defined.
@@ -23360,7 +23292,7 @@ export class ReferenceProperty {
     /**
      * Gets the resolved instance of the underlying referenced property.
      */
-    readonly resolvedProperty: Property | undefined;
+    readonly resolvedProperty: Property;
     /**
      * Creates a new instance given the entity collection that will
      * be used to resolve it and a string indicating the target entity id and property.
@@ -23740,11 +23672,11 @@ export class SampledProperty {
  */
 export class StripeMaterialProperty {
     constructor(options?: {
-        orientation?: Property | StripeOrientation;
-        evenColor?: Property | Color;
-        oddColor?: Property | Color;
-        offset?: Property | number;
-        repeat?: Property | number;
+        orientation?: Property;
+        evenColor?: Property;
+        oddColor?: Property;
+        offset?: Property;
+        repeat?: Property;
     });
     /**
      * Gets a value indicating if this property is constant.  A property is considered
@@ -23760,26 +23692,26 @@ export class StripeMaterialProperty {
     /**
      * Gets or sets the Property specifying the {@link StripeOrientation}/
      */
-    orientation: Property | undefined;
+    orientation: Property;
     /**
      * Gets or sets the Property specifying the first {@link Color}.
      */
-    evenColor: Property | undefined;
+    evenColor: Property;
     /**
      * Gets or sets the Property specifying the second {@link Color}.
      */
-    oddColor: Property | undefined;
+    oddColor: Property;
     /**
      * Gets or sets the numeric Property specifying the point into the pattern
      * to begin drawing; with 0.0 being the beginning of the even color, 1.0 the beginning
      * of the odd color, 2.0 being the even color again, and any multiple or fractional values
      * being in between.
      */
-    offset: Property | undefined;
+    offset: Property;
     /**
      * Gets or sets the numeric Property specifying how many times the stripes repeat.
      */
-    repeat: Property | undefined;
+    repeat: Property;
     /**
      * Gets the {@link Material} type at the provided time.
      * @param time - The time for which to retrieve the type.
@@ -23945,7 +23877,7 @@ export class TimeIntervalCollectionProperty {
  * @param [ellipsoid = Ellipsoid.WGS84] - The ellipsoid used to determine which way is up.
  */
 export class VelocityOrientationProperty {
-    constructor(position?: PositionProperty, ellipsoid?: Ellipsoid);
+    constructor(position?: Property, ellipsoid?: Ellipsoid);
     /**
      * Gets a value indicating if this property is constant.
      */
@@ -23957,11 +23889,11 @@ export class VelocityOrientationProperty {
     /**
      * Gets or sets the position property used to compute orientation.
      */
-    position: Property | undefined;
+    position: Property;
     /**
      * Gets or sets the ellipsoid used to determine which way is up.
      */
-    ellipsoid: Property | undefined;
+    ellipsoid: Property;
     /**
      * Gets the value of the property at the provided time.
      * @param [time] - The time for which to retrieve the value.
@@ -23996,7 +23928,7 @@ export class VelocityOrientationProperty {
  * @param [normalize = true] - Whether to normalize the computed velocity vector.
  */
 export class VelocityVectorProperty {
-    constructor(position?: PositionProperty, normalize?: boolean);
+    constructor(position?: Property, normalize?: boolean);
     /**
      * Gets a value indicating if this property is constant.
      */
@@ -24008,7 +23940,7 @@ export class VelocityVectorProperty {
     /**
      * Gets or sets the position property used to compute the velocity vector.
      */
-    position: Property | undefined;
+    position: Property;
     /**
      * Gets or sets whether the vector produced by this property
      * will be normalized or not.
@@ -24473,40 +24405,30 @@ export class ArcGisMapServerImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -24548,7 +24470,7 @@ export class ArcGisMapServerImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link ArcGisMapServerImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link ArcGisMapServerImageryProvider#ready} returns true.
@@ -25188,7 +25110,7 @@ export namespace BingMapsImageryProvider {
     /**
      * Initialization options for the BingMapsImageryProvider constructor
      * @property url - The url of the Bing Maps server hosting the imagery.
-     * @property key - The Bing Maps key for your application, which can be
+     * @property [key] - The Bing Maps key for your application, which can be
      *        created at {@link https://www.bingmapsportal.com/}.
      *        If this parameter is not provided, {@link BingMapsApi.defaultKey} is used, which is undefined by default.
      * @property [tileProtocol] - The protocol to use when loading tiles, e.g. 'http' or 'https'.
@@ -25205,7 +25127,7 @@ export namespace BingMapsImageryProvider {
      */
     type ConstructorOptions = {
         url: Resource | string;
-        key: string;
+        key?: string;
         tileProtocol?: string;
         mapStyle?: BingMapsStyle;
         culture?: string;
@@ -25230,40 +25152,30 @@ export class BingMapsImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -25308,7 +25220,7 @@ export class BingMapsImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link BingMapsImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link BingMapsImageryProvider#ready} returns true.
@@ -27645,7 +27557,6 @@ export class Cesium3DTileStyle {
  * @param [options.luminanceAtZenith = 0.2] - The sun's luminance at the zenith in kilo candela per meter squared to use for this model's procedural environment map.
  * @param [options.sphericalHarmonicCoefficients] - The third order spherical harmonic coefficients used for the diffuse color of image-based lighting.
  * @param [options.specularEnvironmentMaps] - A URL to a KTX file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
- * @param [options.backFaceCulling = true] - Whether to cull back-facing geometry. When true, back face culling is determined by the glTF material's doubleSided property; when false, back face culling is disabled.
  * @param [options.debugHeatmapTilePropertyName] - The tile variable to colorize as a heatmap. All rendered tiles will be colorized relative to each other's specified variable value.
  * @param [options.debugFreezeFrame = false] - For debugging only. Determines if only the tiles from last frame should be used for rendering.
  * @param [options.debugColorizeTiles = false] - For debugging only. When true, assigns a random color to each tile.
@@ -27697,7 +27608,6 @@ export class Cesium3DTileset {
         luminanceAtZenith?: number;
         sphericalHarmonicCoefficients?: Cartesian3[];
         specularEnvironmentMaps?: string;
-        backFaceCulling?: boolean;
         debugHeatmapTilePropertyName?: string;
         debugFreezeFrame?: boolean;
         debugColorizeTiles?: boolean;
@@ -28026,11 +27936,6 @@ export class Cesium3DTileset {
      * A URL to a KTX file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
      */
     specularEnvironmentMaps: string;
-    /**
-     * Whether to cull back-facing geometry. When true, back face culling is determined
-     * by the glTF material's doubleSided property; when false, back face culling is disabled.
-     */
-    backFaceCulling: boolean;
     /**
      * This property is for debugging only; it is not optimized for production use.
      * <p>
@@ -29980,40 +29885,30 @@ export class GoogleEarthEnterpriseImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -30044,7 +29939,7 @@ export class GoogleEarthEnterpriseImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link GoogleEarthEnterpriseImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link GoogleEarthEnterpriseImageryProvider#ready} returns true.
@@ -30198,40 +30093,30 @@ export class GoogleEarthEnterpriseMapsProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -30270,7 +30155,7 @@ export class GoogleEarthEnterpriseMapsProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link GoogleEarthEnterpriseMapsProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link GoogleEarthEnterpriseMapsProvider#ready} returns true.
@@ -30401,40 +30286,30 @@ export class GridImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -30461,7 +30336,7 @@ export class GridImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link GridImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link GridImageryProvider#ready} returns true.
@@ -31498,40 +31373,40 @@ export class ImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultNightAlpha: number | undefined;
+    defaultNightAlpha: number;
     /**
      * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultDayAlpha: number | undefined;
+    defaultDayAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -31567,7 +31442,7 @@ export class ImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link ImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link ImageryProvider#ready} returns true. Generally,
@@ -31707,40 +31582,30 @@ export class IonImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -31776,7 +31641,7 @@ export class IonImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link IonImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link IonImageryProvider#ready} returns true. Generally,
@@ -32376,7 +32241,7 @@ export namespace MapboxImageryProvider {
      * Initialization options for the MapboxImageryProvider constructor
      * @property [url = 'https://api.mapbox.com/v4/'] - The Mapbox server url.
      * @property mapId - The Mapbox Map ID.
-     * @property accessToken - The public access token for the imagery.
+     * @property [accessToken] - The public access token for the imagery.
      * @property [format = 'png'] - The format of the image request.
      * @property [ellipsoid] - The ellipsoid.  If not specified, the WGS84 ellipsoid is used.
      * @property [minimumLevel = 0] - The minimum level-of-detail supported by the imagery provider.  Take care when specifying
@@ -32389,7 +32254,7 @@ export namespace MapboxImageryProvider {
     type ConstructorOptions = {
         url?: string;
         mapId: string;
-        accessToken: string;
+        accessToken?: string;
         format?: string;
         ellipsoid?: Ellipsoid;
         minimumLevel?: number;
@@ -32415,40 +32280,30 @@ export class MapboxImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -32488,7 +32343,7 @@ export class MapboxImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link MapboxImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link MapboxImageryProvider#ready} returns true. Generally,
@@ -32578,7 +32433,7 @@ export namespace MapboxStyleImageryProvider {
      * @property [url = 'https://api.mapbox.com/styles/v1/'] - The Mapbox server url.
      * @property [username = 'mapbox'] - The username of the map account.
      * @property styleId - The Mapbox Style ID.
-     * @property accessToken - The public access token for the imagery.
+     * @property [accessToken] - The public access token for the imagery.
      * @property [tilesize = 512] - The size of the image tiles.
      * @property [scaleFactor] - Determines if tiles are rendered at a @2x scale factor.
      * @property [ellipsoid] - The ellipsoid.  If not specified, the WGS84 ellipsoid is used.
@@ -32593,7 +32448,7 @@ export namespace MapboxStyleImageryProvider {
         url?: Resource | string;
         username?: string;
         styleId: string;
-        accessToken: string;
+        accessToken?: string;
         tilesize?: number;
         scaleFactor?: boolean;
         ellipsoid?: Ellipsoid;
@@ -32620,40 +32475,30 @@ export class MapboxStyleImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -32693,7 +32538,7 @@ export class MapboxStyleImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link MapboxStyleImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link MapboxStyleImageryProvider#ready} returns true. Generally,
@@ -33381,7 +33226,6 @@ export namespace MaterialAppearance {
  * @param [options.sphericalHarmonicCoefficients] - The third order spherical harmonic coefficients used for the diffuse color of image-based lighting.
  * @param [options.specularEnvironmentMaps] - A URL to a KTX file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
  * @param [options.credit] - A credit for the data source, which is displayed on the canvas.
- * @param [options.backFaceCulling = true] - Whether to cull back-facing geometry. When true, back face culling is determined by the material's doubleSided property; when false, back face culling is disabled. Back faces are not culled if {@link Model#color} is translucent or {@link Model#silhouetteSize} is greater than 0.0.
  */
 export class Model {
     constructor(options?: {
@@ -33416,7 +33260,6 @@ export class Model {
         sphericalHarmonicCoefficients?: Cartesian3[];
         specularEnvironmentMaps?: string;
         credit?: Credit | string;
-        backFaceCulling?: boolean;
     });
     /**
      * Determines if the model primitive will be shown.
@@ -33492,13 +33335,6 @@ export class Model {
      * any value in-between resulting in a mix of the two.
      */
     colorBlendAmount: number;
-    /**
-     * Whether to cull back-facing geometry. When true, back face culling is
-     * determined by the material's doubleSided property; when false, back face
-     * culling is disabled. Back faces are not culled if {@link Model#color} is
-     * translucent or {@link Model#silhouetteSize} is greater than 0.0.
-     */
-    backFaceCulling: boolean;
     /**
      * This property is for debugging only; it is not for production use nor is it optimized.
      * <p>
@@ -33720,7 +33556,6 @@ export class Model {
      * @param [options.clippingPlanes] - The {@link ClippingPlaneCollection} used to selectively disable rendering the model.
      * @param [options.dequantizeInShader = true] - Determines if a {@link https://github.com/google/draco|Draco} encoded model is dequantized on the GPU. This decreases total memory usage for encoded models.
      * @param [options.credit] - A credit for the model, which is displayed on the canvas.
-     * @param [options.backFaceCulling = true] - Whether to cull back-facing geometry. When true, back face culling is determined by the material's doubleSided property; when false, back face culling is disabled. Back faces are not culled if {@link Model#color} is translucent or {@link Model#silhouetteSize} is greater than 0.0.
      * @returns The newly created model.
      */
     static fromGltf(options: {
@@ -33750,7 +33585,6 @@ export class Model {
         clippingPlanes?: ClippingPlaneCollection;
         dequantizeInShader?: boolean;
         credit?: Credit | string;
-        backFaceCulling?: boolean;
     }): Model;
     /**
      * Returns the glTF node with the given <code>name</code> property.  This is used to
@@ -36046,7 +35880,7 @@ export namespace PostProcessStageLibrary {
      * greenEdge.selected = [feature1];
      *
      * // draw edges around feature0 and feature1
-     * postProcessStages.add(Cesium.PostProcessLibrary.createSilhouetteStage([yellowEdge, greenEdge]);
+     * postProcessStages.add(Cesium.PostProcessLibrary.createSilhouetteEffect([yellowEdge, greenEdge]);
      * @returns A post-process stage that applies an edge detection effect.
      */
     function createEdgeDetectionStage(): PostProcessStageComposite;
@@ -36071,10 +35905,9 @@ export namespace PostProcessStageLibrary {
      * <code>color</code> is the color of the highlighted edge. The default is {@link Color#BLACK}.
      * <code>length</code> is the length of the edges in pixels. The default is <code>0.5</code>.
      * </p>
-     * @param [edgeDetectionStages] - An array of edge detection post process stages.
      * @returns A post-process stage that applies a silhouette effect.
      */
-    function createSilhouetteStage(edgeDetectionStages?: PostProcessStage[]): PostProcessStageComposite;
+    function createSilhouetteStage(): PostProcessStageComposite;
     /**
      * Whether or not a silhouette stage is supported.
      * <p>
@@ -37172,7 +37005,7 @@ export class Scene {
      * @param [width = 0.1] - Width of the intersection volume in meters.
      * @returns A promise that resolves to the provided list of positions when the query has completed.
      */
-    sampleHeightMostDetailed(positions: Cartographic[], objectsToExclude?: object[], width?: number): Promise<Cartographic[]>;
+    sampleHeightMostDetailed(positions: Cartographic[], objectsToExclude?: object[], width?: number): Promise<number[]>;
     /**
      * Initiates an asynchronous {@link Scene#clampToHeight} query for an array of {@link Cartesian3} positions
      * using the maximum level of detail for 3D Tilesets in the scene. Returns a promise that is resolved when
@@ -37585,40 +37418,30 @@ export class SingleTileImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -37649,7 +37472,7 @@ export class SingleTileImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link SingleTileImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link SingleTileImageryProvider#ready} returns true.
@@ -38078,48 +37901,38 @@ export namespace TileCoordinatesImageryProvider {
  * An {@link ImageryProvider} that draws a box around every rendered tile in the tiling scheme, and draws
  * a label inside it indicating the X, Y, Level coordinates of the tile.  This is mostly useful for
  * debugging terrain and imagery rendering problems.
- * @param [options] - Object describing initialization options
+ * @param options - Object describing initialization options
  */
 export class TileCoordinatesImageryProvider {
-    constructor(options?: TileCoordinatesImageryProvider.ConstructorOptions);
+    constructor(options: TileCoordinatesImageryProvider.ConstructorOptions);
     /**
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -38146,7 +37959,7 @@ export class TileCoordinatesImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
@@ -38661,40 +38474,30 @@ export class UrlTemplateImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -38786,7 +38589,7 @@ export class UrlTemplateImageryProvider {
      * Gets the maximum level-of-detail that can be requested, or undefined if there is no limit.
      * This function should not be called before {@link UrlTemplateImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link UrlTemplateImageryProvider#ready} returns true.
@@ -39050,40 +38853,30 @@ export class WebMapServiceImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -39118,7 +38911,7 @@ export class WebMapServiceImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link WebMapServiceImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link WebMapServiceImageryProvider#ready} returns true.
@@ -39342,40 +39135,30 @@ export class WebMapTileServiceImageryProvider {
      * The default alpha blending value of this provider, with 0.0 representing fully transparent and
      * 1.0 representing fully opaque.
      */
-    defaultAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultNightAlpha: number | undefined;
-    /**
-     * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-     * 1.0 representing fully opaque.
-     */
-    defaultDayAlpha: number | undefined;
+    defaultAlpha: number;
     /**
      * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
      * makes the imagery darker while greater than 1.0 makes it brighter.
      */
-    defaultBrightness: number | undefined;
+    defaultBrightness: number;
     /**
      * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
      * the contrast while greater than 1.0 increases it.
      */
-    defaultContrast: number | undefined;
+    defaultContrast: number;
     /**
      * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
      */
-    defaultHue: number | undefined;
+    defaultHue: number;
     /**
      * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
      * saturation while greater than 1.0 increases it.
      */
-    defaultSaturation: number | undefined;
+    defaultSaturation: number;
     /**
      * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
      */
-    defaultGamma: number | undefined;
+    defaultGamma: number;
     /**
      * The default texture minification filter to apply to this provider.
      */
@@ -39406,7 +39189,7 @@ export class WebMapTileServiceImageryProvider {
      * Gets the maximum level-of-detail that can be requested.  This function should
      * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
      */
-    readonly maximumLevel: number | undefined;
+    readonly maximumLevel: number;
     /**
      * Gets the minimum level-of-detail that can be requested.  This function should
      * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
@@ -40619,23 +40402,23 @@ export class CesiumWidget {
     /**
      * Gets the parent container.
      */
-    readonly container: Element;
+    container: Element;
     /**
      * Gets the canvas.
      */
-    readonly canvas: HTMLCanvasElement;
+    canvas: HTMLCanvasElement;
     /**
      * Gets the credit container.
      */
-    readonly creditContainer: Element;
+    creditContainer: Element;
     /**
      * Gets the credit viewport
      */
-    readonly creditViewport: Element;
+    creditViewport: Element;
     /**
      * Gets the scene.
      */
-    readonly scene: Scene;
+    scene: Scene;
     /**
      * Gets the collection of image layers that will be rendered on the globe.
      */
@@ -40651,11 +40434,11 @@ export class CesiumWidget {
     /**
      * Gets the clock.
      */
-    readonly clock: Clock;
+    clock: Clock;
     /**
      * Gets the screen space event handler.
      */
-    readonly screenSpaceEventHandler: ScreenSpaceEventHandler;
+    screenSpaceEventHandler: ScreenSpaceEventHandler;
     /**
      * Gets or sets the target frame rate of the widget when <code>useDefaultRenderLoop</code>
      * is true. If undefined, the browser's {@link requestAnimationFrame} implementation
@@ -40699,10 +40482,10 @@ export class CesiumWidget {
      * when a render loop error occurs, if showRenderLoopErrors was not false when the
      * widget was constructed.
      * @param title - The title to be displayed on the error panel.  This string is interpreted as text.
-     * @param [message] - A helpful, user-facing message to display prior to the detailed error information.  This string is interpreted as HTML.
+     * @param message - A helpful, user-facing message to display prior to the detailed error information.  This string is interpreted as HTML.
      * @param [error] - The error to be displayed on the error panel.  This string is formatted using {@link formatError} and then displayed as text.
      */
-    showErrorPanel(title: string, message?: string, error?: string): void;
+    showErrorPanel(title: string, message: string, error?: string): void;
     /**
      * @returns true if the object has been destroyed, false otherwise.
      */
@@ -41750,7 +41533,7 @@ export namespace Viewer {
      * @property [terrainProviderViewModels = createDefaultTerrainProviderViewModels()] - The array of ProviderViewModels to be selectable from the BaseLayerPicker.  This value is only valid if `baseLayerPicker` is set to true.
      * @property [imageryProvider = createWorldImagery()] - The imagery provider to use.  This value is only valid if `baseLayerPicker` is set to false.
      * @property [terrainProvider = new EllipsoidTerrainProvider()] - The terrain provider to use
-     * @property [skyBox] - The skybox used to render the stars.  When <code>undefined</code>, the default stars are used. If set to <code>false</code>, no skyBox, Sun, or Moon will be added.
+     * @property [skyBox] - The skybox used to render the stars.  When <code>undefined</code>, the default stars are used.
      * @property [skyAtmosphere] - Blue sky, and the glow around the Earth's limb.  Set to <code>false</code> to turn it off.
      * @property [fullscreenElement = document.body] - The element or id to be placed into fullscreen mode when the full screen button is pressed.
      * @property [useDefaultRenderLoop = true] - True if this widget should control the render loop, false otherwise.
@@ -41797,8 +41580,8 @@ export namespace Viewer {
         terrainProviderViewModels?: ProviderViewModel[];
         imageryProvider?: ImageryProvider;
         terrainProvider?: TerrainProvider;
-        skyBox?: SkyBox | false;
-        skyAtmosphere?: SkyAtmosphere | false;
+        skyBox?: SkyBox;
+        skyAtmosphere?: SkyAtmosphere;
         fullscreenElement?: Element | string;
         useDefaultRenderLoop?: boolean;
         targetFrameRate?: number;
@@ -41868,10 +41651,10 @@ export namespace Viewer {
  *     window.alert(error);
  * });
  * @param container - The DOM element or ID that will contain the widget.
- * @param [options] - Object describing initialization options
+ * @param options - Object describing initialization options
  */
 export class Viewer {
-    constructor(container: Element | string, options?: Viewer.ConstructorOptions);
+    constructor(container: Element | string, options: Viewer.ConstructorOptions);
     /**
      * Gets the parent container.
      */
@@ -42287,7 +42070,6 @@ declare module "cesium/Source/Core/GeographicTilingScheme" { import { Geographic
 declare module "cesium/Source/Core/Geometry" { import { Geometry } from 'cesium'; export default Geometry; }
 declare module "cesium/Source/Core/GeometryAttribute" { import { GeometryAttribute } from 'cesium'; export default GeometryAttribute; }
 declare module "cesium/Source/Core/GeometryAttributes" { import { GeometryAttributes } from 'cesium'; export default GeometryAttributes; }
-declare module "cesium/Source/Core/GeometryFactory" { import { GeometryFactory } from 'cesium'; export default GeometryFactory; }
 declare module "cesium/Source/Core/GeometryInstance" { import { GeometryInstance } from 'cesium'; export default GeometryInstance; }
 declare module "cesium/Source/Core/GeometryInstanceAttribute" { import { GeometryInstanceAttribute } from 'cesium'; export default GeometryInstanceAttribute; }
 declare module "cesium/Source/Core/GeometryPipeline" { import { GeometryPipeline } from 'cesium'; export default GeometryPipeline; }
@@ -42401,7 +42183,6 @@ declare module "cesium/Source/Core/WeightSpline" { import { WeightSpline } from 
 declare module "cesium/Source/Core/WindingOrder" { import { WindingOrder } from 'cesium'; export default WindingOrder; }
 declare module "cesium/Source/Core/barycentricCoordinates" { import { barycentricCoordinates } from 'cesium'; export default barycentricCoordinates; }
 declare module "cesium/Source/Core/binarySearch" { import { binarySearch } from 'cesium'; export default binarySearch; }
-declare module "cesium/Source/Core/buildModuleUrl" { import { buildModuleUrl } from 'cesium'; export default buildModuleUrl; }
 declare module "cesium/Source/Core/cancelAnimationFrame" { import { cancelAnimationFrame } from 'cesium'; export default cancelAnimationFrame; }
 declare module "cesium/Source/Core/clone" { import { clone } from 'cesium'; export default clone; }
 declare module "cesium/Source/Core/combine" { import { combine } from 'cesium'; export default combine; }
